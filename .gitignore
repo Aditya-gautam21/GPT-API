@@ -1,2 +1,6 @@
 .env
 settings.json
+__pycache__/
+__pycache__
+.gitignore
+test.ipynb
