@@ -7,44 +7,53 @@ load_dotenv()
 
 DATA_API = os.getenv("DINESPHERE_DATA_API")
 
-data = requests.get(DATA_API).json()
+def load_data():
+    data = requests.get(DATA_API).json()
 
-docs = []
+    docs = []
 
-orders = data.get("data", {}).get("orders", [])
+    orders = data.get("data", {}).get("orders", [])
 
-for order in orders:
-    customer = order.get("customer_name", "Unknown")
-    total = order.get("total_amount", 0)
+    for order in orders:
+        customer = order.get("customer_name", "Unknown")
+        total = order.get("total_amount", 0)
 
-    order_items = order.get("order", [])  # list
+        order_items = order.get("order", [])  # list
 
-    items_list = []
+        items_list = []
 
-    for entry in order_items:
-        quantity = entry.get("quantity", 1)
+        for entry in order_items:
+            quantity = entry.get("quantity", 1)
 
-        for item in entry.get("items", []):
-            title = item.get("title", "Unknown")
-            items_list.append(f"{title} x{quantity}")
+            for item in entry.get("items", []):
+                title = item.get("title", "Unknown")
+                items_list.append(f"{title} x{quantity}")
 
-    items_str = ", ".join(items_list)
+        items_str = ", ".join(items_list)
 
-    content = (
-        f"Customer: {customer}\n"
-        f"Items: {items_str}\n"
-        f"Total Amount: ₹{total}"
-    )
-
-    docs.append(
-        Document(
-            page_content=content,
-            metadata={
-                "customer": customer,
-                "total": total,
-                "source": "api"
-            }
+        content = (
+            f"Customer: {customer}\n"
+            f"Items: {items_str}\n"
+            f"\n Total Amount: ₹{total}"
         )
-    )
 
-print(docs[:2])
+        docs.append(
+            Document(
+                page_content=content,
+                metadata={
+                    "customer": customer,
+                    "total": total
+                }
+            )
+        )
+
+    for doc in docs[:5]:
+        print(doc.content)
+        print("\n --------xxxxxx--------")
+    
+def save_data():
+    pass
+
+if __name__ == '__main__':
+    load_data()
+    
