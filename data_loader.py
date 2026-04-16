@@ -31,28 +31,14 @@ def load_data():
 
         items_str = ", ".join(items_list)
 
-        content = (
-            f"Customer: {customer}\n"
-            f"Items: {items_str}\n"
-            f"\n Total Amount: ₹{total}"
-        )
-
-        docs.append(
-            Document(
-                page_content=content,
-                metadata={
-                    "customer": customer,
-                    "total": total
-                }
+        with open('orders.txt', 'a', encoding='utf-8') as f:
+            content = (
+                f"Customer: {customer}\n"
+                f"Items: {items_str}\n"
+                f"Total Amount: ₹{total}\n"
             )
-        )
 
-    for doc in docs[:5]:
-        print(doc.content)
-        print("\n --------xxxxxx--------")
-    
-def save_data():
-    pass
+            f.write(content + '\n\n')
 
 if __name__ == '__main__':
     load_data()
